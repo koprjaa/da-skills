@@ -1,6 +1,6 @@
 # da-skills
 
-Twelve Claude Code skills that design a data architecture from scratch or review an existing one. They cover the business context, source inventory, choice of style (Inmon, Kimball, Data Vault, lakehouse), identity consolidation, reference data, the integrated core, loading, data marts, governance, and the handover package with its decision records.
+Twelve Claude Code skills that design a data architecture from scratch or review an existing one: context, source inventory, Inmon, Kimball or Data Vault, consolidation, core model, integration, data marts, and governance.
 
 ![claude-code](https://img.shields.io/badge/Claude%20Code-skills-D97757?style=flat-square)
 ![license](https://img.shields.io/badge/license-MIT-A31F34?style=flat-square)
@@ -99,8 +99,9 @@ The skills contain documentation and SQL sketches. They ship no runnable code an
 ## Development
 
 ```bash
-uv run --extra dev ruff check .
-uv run --extra dev pytest -q
+cargo fmt --check
+cargo clippy --all-targets -- -D warnings
+cargo test
 ```
 
 The suite checks the shape of each skill file rather than its content: that the frontmatter parses, that the name matches its directory, that the description is long enough to be matched on, and that every pipeline step is named in `da-pipeline`. A skill with broken frontmatter is not loaded and not reported, so nothing tells you a step is missing until the pipeline silently skips it.
