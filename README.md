@@ -1,21 +1,21 @@
 # da-skills
 
-Twelve Claude Code skills that design a data architecture from scratch or review an existing one: context, source inventory, Inmon, Kimball or Data Vault, consolidation, core model, integration, data marts, and governance.
+Twelve Claude Code skills that design a data architecture from scratch or review an existing one, from requirements and source inventory through the choice of Inmon, Kimball or Data Vault to the core model, loading, data marts and governance.
 
 ![claude-code](https://img.shields.io/badge/Claude%20Code-skills-D97757?style=flat-square)
 ![license](https://img.shields.io/badge/license-MIT-A31F34?style=flat-square)
 ![status](https://img.shields.io/badge/status-active-22863A?style=flat-square)
 [![ci](https://github.com/koprjaa/da-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/koprjaa/da-skills/actions/workflows/ci.yml)
 
-The method comes from the course 4IT419 Data Solution Architectures at Prague University of Economics and Business: its lectures, the readings on Inmon, Kimball and Data Vault 2.0, and a warehouse case study built on several overlapping source systems. The skills carry no domain. The same steps apply to a retailer, an insurer, a hospital, or a public registry.
+The method comes from the course 4IT419 Data Solution Architectures at Prague University of Economics and Business: its lectures, the readings on Inmon, Kimball and Data Vault 2.0, and a warehouse case study built on several overlapping source systems. Nothing in the skills is tied to that case study, and the steps work the same for an insurer or a public registry.
 
-It is the sibling of [dq-skills](https://github.com/koprjaa/dq-skills). Architecture decides where data lives and how it is joined; data quality measures whether what arrives there is right. The steps here hand off to the DQ skills where the two meet.
+The companion set is [dq-skills](https://github.com/koprjaa/dq-skills), which measures and fixes the quality of the data itself. Consolidation, governance and source profiling hand off to it.
 
 ## Two modes
 
-**Design.** Start from a problem and goals, end with a defended architecture. Every step closes with a decision record.
+In design mode you start from a problem and goals and end with an architecture you can defend. Every step closes with a decision record.
 
-**Review.** Reconstruct what actually exists (not what the documentation says), walk the same steps as a checklist, and produce a prioritised finding catalogue where each finding points to the step that fixes it.
+In review mode you first reconstruct what is actually deployed, since documentation drifts from it. Then you walk the same steps as a checklist and end with a prioritised finding catalogue, each finding pointing to the step that fixes it.
 
 The modes combine. A review often ends with one layer being redesigned, and that layer goes through design mode.
 
@@ -46,11 +46,11 @@ da-review    entry for review mode, sends each finding to the step that fixes it
 | `da-governance` | Ownership and stewardship, metadata and lineage, quality as a control, security, operating model. |
 | `da-handover` | Architecture package, decision log, an 8 to 10 minute presentation, the questions to expect. |
 
-The order matters. A core model designed before consolidation bakes in the wrong identities, so two records of one customer stay two entities and every mart counts them twice. A mart designed before the core brings back several versions of the truth, the problem the warehouse exists to remove. Skip steps the domain does not have; do not reorder them.
+Run the steps in this order. A core model designed before consolidation bakes in the wrong identities, so two records of one customer stay two entities and every mart counts them twice. A mart designed before the core brings back several versions of the truth, the problem the warehouse exists to remove. Skip steps the domain does not have; do not reorder them.
 
 ## Decision format
 
-Each design step ends with a record in the same shape, so the handover package is assembled rather than written:
+Each design step ends with a record in the same shape, so the handover package is mostly a matter of collecting them:
 
 ```
 Problem / Options / Criteria / Choice / Assumptions / Risks / Consequences
@@ -86,11 +86,11 @@ You can also call one directly with `/da-pipeline` or `/da-review`. Start with `
 - An architecture is designed for a stated problem. Without goals there is no right answer.
 - Do not merge records you cannot prove are the same entity. A wrong merge is harder to undo than a missed one.
 - Every choice names the options it rejected and why.
-- The warehouse is not done when it loads. It is done when someone owns it and reconciliation passes.
+- A warehouse is finished when it has an owner and reconciliation with the sources passes.
 
 ## How it was tested
 
-The skills were evaluated with Anthropic's skill-creator: three tasks (a design from three overlapping sources, a review of a broken warehouse, an approach choice for an audited insurer), each run with and without the skills. With the skills, answers were more explicit about evidence, rejected options and merge risks, at roughly twice the time and about 50 % more tokens. A strong model already knows the textbook answers, so the gain is in rigour, not in facts.
+The skills were evaluated with Anthropic's skill-creator: three tasks (a design from three overlapping sources, a review of a broken warehouse, an approach choice for an audited insurer), each run with and without the skills. With the skills, answers were more explicit about evidence, rejected options and merge risks, at roughly twice the time and about 50 % more tokens. A strong model already knows the textbook answers, so the skills mostly add rigour.
 
 ## Limits
 
@@ -104,7 +104,7 @@ cargo clippy --all-targets -- -D warnings
 cargo test
 ```
 
-The suite checks the shape of each skill file rather than its content: that the frontmatter parses, that the name matches its directory, that the description is long enough to be matched on, and that every pipeline step is named in `da-pipeline`. A skill with broken frontmatter is not loaded and not reported, so nothing tells you a step is missing until the pipeline silently skips it.
+The tests check the shape of each skill file. The frontmatter has to parse, the name has to match the directory, and the description has to be long enough to match on and end with a keyword list. Every pipeline step has to appear in `da-pipeline`. Claude Code skips a skill with broken frontmatter without an error, so without these tests a missing step shows up only when the pipeline runs past it.
 
 ## License
 

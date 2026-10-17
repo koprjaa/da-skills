@@ -2,7 +2,7 @@
 name = "da-skills"
 version = "1.0.0"
 edition = "2024"
-description = "Twelve Claude Code skills that design a data architecture from scratch or review an existing one: context, source inventory, Inmon, Kimball or Data Vault, consolidation, core model, integration, data marts, and governance."
+description = "Twelve Claude Code skills that design a data architecture from scratch or review an existing one, from requirements and source inventory through the choice of Inmon, Kimball or Data Vault to the core model, loading, data marts and governance."
 license = "MIT"
 repository = "https://github.com/koprjaa/da-skills"
 keywords = ["claude-code", "skills", "data-architecture", "data-warehouse", "data-vault"]
