@@ -57,6 +57,30 @@ The keys decide the rest:
 Events from the new source (regional match actions) go to the existing non-historised link with their
 own record source, or to a separate one if the grain differs.
 
+## Events and late data
+
+Events (match actions, line items, payments) go to a non-historised link. Three rules keep it correct when
+data arrives late, is corrected or comes from a stream:
+
+- **Two times.** Store when the event happened (`action_timestamp`, minute of the match) apart from when it
+  was loaded (`ldts`). A red card given after the match by a disciplinary decision arrives days later: it
+  is a new row with an early event time and a late load time. Reports use the event time, audit uses the
+  load time. Nothing is reordered or rewritten.
+- **Corrections are new events.** The course states that changes in transactional data show up as new
+  transactions or reversal entries, not as updates. A yellow card upgraded to red is two new events (the
+  reversal of the yellow and the red), the original row stays. If the source instead updates the event in
+  place, a non-historised link cannot hold the correction; ask the source owner, and if updates are real,
+  model the event as a standard link with a satellite.
+- **A source identifier per event.** Build the link hash key from the hub keys plus an identifier the source
+  gives the event (`rowguid`, invoice number), never from the arrival time. A stream that delivers a message
+  twice then produces the same hash key and the second copy is not loaded again. (Duplicate delivery in
+  streams is general practice, not in the course materials.)
+
+Real-time sources load straight into the raw vault, next to the batch path through staging. Hash keys
+make this work: a link computes the player's hash key itself and does not wait for anything. The player
+hub is loaded from every stage that carries the key, the stream included; only the player's satellite,
+with name and attributes, waits for the batch from the player source.
+
 ## Checklist for any change
 
 | Question | If yes |
@@ -66,4 +90,5 @@ own record source, or to a separate one if the grain differs.
 | does it exist only through a rule? | exploration link in the business vault |
 | does it add or change attributes? | new satellite, or a documented change of an existing one |
 | does it bring a second key for known objects? | same-as link |
+| is it an event, or a correction of one? | a row in the non-historised link with its source identifier; a correction is a reversal plus a new event |
 | does any existing table have to be rebuilt? | stop: look for the additive way |

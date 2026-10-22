@@ -58,8 +58,18 @@ are recommended, not mandatory; the business key itself is the other option.
 Choose the non-historised link when the source never updates the record but issues new transactions or
 reversals: invoices, sensor data, line items, clicks and sessions. Whatever you choose for events, give
 each one its identifier (invoice number, session timestamp); otherwise two events of the same pair of
-keys collapse into one link row. A hub is for a key the business cares
-about; a key that only relates other keys belongs in a link.
+keys collapse into one link row. A hub is for a key the business cares about; a key that only relates
+other keys belongs in a link.
+
+**One relationship per link.** Every foreign key between tables in scope is its own link (`match.home_team_id`
+→ match-home-team link, `match.away_team_id` → match-away-team link). Do not bundle independent
+relationships into one wide link: a team's nation, league, home stadium and sponsors change independently,
+and a link holding all of them produces a new row for every combination. A foreign key to a table that is
+not modelled yet stays an attribute in the satellite until that table gets its hub. Events are the
+exception: a non-historised link may connect several hubs because the event itself is the unit
+(`match_action`: match, player, action type).
+
+Events, corrections and streaming are in [references/changes.md](references/changes.md#events-and-late-data).
 
 Hubs are stable and rarely change; links allow many-to-many relationships and a change of a relationship
 without touching the hubs; satellites hold history without overwriting. A change of descriptive data
@@ -117,6 +127,8 @@ generated from metadata rather than written by hand; that is what `da-dv-build` 
 | does the raw vault hold raw data? | cleaning, derivations or business logic in raw vault satellites | C: no single version of the facts |
 | is the business key normalised before hashing? | different spellings produce several hub rows for one object | C: duplicate hubs |
 | is the hub key a business key? | a technical id that collides across systems | C: two objects in one hub row |
+| one relationship per link? | one link bundling independent relationships (nation, league, stadium, sponsor of a team) | C: rows multiply, relationships cannot change separately |
+| do events have a source identifier? | event key built from arrival time, so a resent message loads twice | I: duplicated events |
 | are events kept apart? | repeated events of the same pair of keys without an event identifier, so they collapse into one row | I: lost or merged events |
 | does each satellite have one parent and a reason for its split? | a satellite on two parents, or splits nobody can explain | C: wrong model |
 | is personal data separated? | names and contact details in the same satellite as business attributes | G: privacy cannot be controlled |
