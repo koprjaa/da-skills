@@ -1,0 +1,3 @@
+invoice_id,source_document,customer_ref,amount_czk,issued
+AR-7781,ERP:F-7781,88213,12500,2026-05-02
+AR-7782,ERP:F-7782,88214,3200,2026-05-03

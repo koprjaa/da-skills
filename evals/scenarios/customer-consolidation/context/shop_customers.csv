@@ -1,0 +1,6 @@
+customer_id,first_name,last_name,birth_date,email,city
+1045,Adam,Testovy,1985-03-14,adam.testovy@example.org,Brno
+1046,Bara,Vzorova,1990-07-02,bara.vzorova@example.org,Praha
+1047,Cyril,Pokusny,1978-11-30,cyril@example.org,Ostrava
+1048,Cyril,Pokusny,1978-11-30,c.pokusny@example.org,Ostrava
+1049,,,,dana.fiktivni@example.org,

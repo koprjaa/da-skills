@@ -111,6 +111,58 @@ fn a_skill_opens_with_frontmatter() {
     );
 }
 
+/// Fields outside the Agent Skills spec are ignored, so a misplaced one fails silently.
+#[test]
+fn the_frontmatter_uses_only_known_fields() {
+    const ALLOWED: &[&str] = &[
+        "name",
+        "description",
+        "allowed-tools",
+        "compatibility",
+        "license",
+        "metadata",
+        "user-invocable",
+    ];
+    let bad = skills()
+        .iter()
+        .filter_map(|s| {
+            let (fields, _) = split(&s.text)?;
+            let extra: Vec<&str> = fields
+                .keys()
+                .map(String::as_str)
+                .filter(|k| !ALLOWED.contains(k))
+                .collect();
+            (!extra.is_empty()).then(|| format!("{} ({})", s.name, extra.join(", ")))
+        })
+        .collect();
+    assert_all("unknown frontmatter field", bad);
+}
+
+/// allowed-tools pre-approves tools without a permission prompt, it does not restrict them.
+#[test]
+fn no_skill_pre_approves_tools() {
+    assert_all(
+        "allowed-tools set",
+        skills()
+            .into_iter()
+            .filter(|s| !field(s, "allowed-tools").is_empty())
+            .map(|s| s.name)
+            .collect(),
+    );
+}
+
+/// The Review table is the checklist review mode walks, and the list of common mistakes.
+#[test]
+fn every_step_has_a_review_table() {
+    let bad = skills()
+        .into_iter()
+        .filter(|s| s.name != "da-review" && PIPELINE.contains(&s.name.as_str()))
+        .filter(|s| !s.text.contains("\n## Review"))
+        .map(|s| s.name)
+        .collect();
+    assert_all("no ## Review section", bad);
+}
+
 /// Claude Code resolves a skill by directory, so a mismatch is unreachable.
 #[test]
 fn the_name_matches_the_directory() {
