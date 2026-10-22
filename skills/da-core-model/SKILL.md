@@ -26,38 +26,12 @@ logical model (attributes assigned through normalisation, independent of technol
 
 ## Variant B: Data Vault 2.0
 
-Data split into three kinds of objects:
-
-| Object | Content | Mandatory columns |
-|---|---|---|
-| **hub** | a distinct list of the business keys of one business object (customer, product, order) | hash key, business key, load timestamp, record source |
-| **link** | a distinct list of relationships between business keys (customer bought product) | link hash key, hash keys of two or more hubs, load timestamp, record source |
-| **satellite** | descriptive data of a hub or link and its changes over time | parent hash key, load timestamp, hash diff of attributes, attributes |
-
-Hubs are stable and rarely change, links allow many-to-many relationships and changes of a relationship
-without touching the hubs, and satellites hold attribute history without overwriting. A change of
-descriptive data therefore does not affect keys or relationships.
-
-Other raw vault objects: the **multi-active satellite** (several concurrent values, such as several phone
-numbers, told apart by a sequence number) and the **non-historised (transactional) link** for immutable
-events such as invoices or measurements, where a change shows up as a new transaction or reversal, not as
-an update.
-
-The **raw vault** holds raw, unmodified data: one version of the facts, history and auditability. The
-**business vault** carries business rules, cleaning and reusable logic, plus helper structures for
-performance: the **PIT table** (point in time) assembles the state of several satellites at a given
-moment, the **bridge table** joins hubs and links and shifts the data to the target grain, and **computed
-links** (exploration, same-as for clusters of similar entries in a hub, aggregating). What counts as
-"good" and "bad" data is defined by business users, not by the vault.
-
-### Hash keys
-
-A hash key is produced by applying a hash function to the business key and gives a deterministic,
-fixed-length identifier. The reasons: a uniform way to reference a business key across sources and
-formats, index performance thanks to fixed length, shorter strings for composite keys, and above all
-parallel loading of hubs, links and satellites without waiting for sequences. Beware: a hash is sensitive
-to spelling, `B-485` and `b-485` give different hashes. Normalise the business key by one rule before
-hashing (case, whitespace, separator of composite keys) and write the rule down.
+The core is split into hubs (business keys), links (relationships between keys) and satellites
+(descriptive data over time), with a raw vault holding unmodified data and a business vault holding the
+business rules. The design of the vault (keys and hashing, entity types, satellite splits, business
+vault entities, changes in the sources) continues in `da-data-vault`; the implementation in dbt in
+`da-dv-build`. The sections below (business key, constraints, history, dictionary) apply to both
+variants.
 
 ## Choosing the business key
 
@@ -94,8 +68,7 @@ unique constraint; without one it just slows down and inflates the cost of every
 genuinely can be missing, use an explicit unknown member (an "unknown" row in the code list) instead of
 NULL, so it does not drop out of joins.
 
-For Data Vault the standard tests are: the combination of hash key and load timestamp is unique, every
-reference to a hub or link exists, and references are neither NULL nor empty.
+For Data Vault the standard tests are listed in `da-data-vault` and implemented in `da-dv-test`.
 
 ## History
 

@@ -1,0 +1,3 @@
+- `crm_members.csv` is the CRM extract until May 2026, `crm_members_v2.csv` from June 2026: the column `phone` was replaced by `phone_country` and `phone_number`.
+- `partner_app_users.csv` comes from a new partner app. It has its own user ids; some users are also CRM members.
+- Marketing wants every member's "home station": the station where the member started most rentals.

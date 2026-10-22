@@ -36,6 +36,17 @@ const PIPELINE: &[&str] = &[
     "da-handover",
 ];
 
+// Data Vault branch: entered from da-core-model when da-approach chose Data Vault. The da-dv-* skills
+// are adapted from Scalefree's datavault4dbt-agent-skills (Apache 2.0, see NOTICE).
+const BRANCH: &[&str] = &[
+    "da-data-vault",
+    "da-dv-config",
+    "da-dv-build",
+    "da-dv-test",
+    "da-dv-troubleshoot",
+    "da-dv-rehash",
+];
+
 struct Skill {
     name: String,
     text: String,
@@ -161,6 +172,37 @@ fn every_step_has_a_review_table() {
         .map(|s| s.name)
         .collect();
     assert_all("no ## Review section", bad);
+}
+
+/// A branch nobody points to is never reached.
+#[test]
+fn the_data_vault_branch_exists_and_is_wired() {
+    let present: BTreeSet<String> = skills().into_iter().map(|s| s.name).collect();
+    let entry = fs::read_to_string(skills_dir().join(ENTRY).join("SKILL.md")).unwrap();
+    let core = fs::read_to_string(skills_dir().join("da-core-model").join("SKILL.md")).unwrap();
+    let mut bad: Vec<String> = BRANCH
+        .iter()
+        .filter(|b| !present.contains(**b) || !entry.contains(**b))
+        .map(|b| (*b).to_owned())
+        .collect();
+    if !core.contains("da-data-vault") {
+        bad.push("da-core-model does not name da-data-vault".to_owned());
+    }
+    assert_all("branch skill missing or not in the entry point", bad);
+}
+
+/// Adapted skills keep the licence they came with.
+#[test]
+fn adapted_skills_keep_their_licence() {
+    assert_all(
+        "no LICENSE-APACHE",
+        BRANCH
+            .iter()
+            .filter(|b| b.starts_with("da-dv-"))
+            .filter(|b| !skills_dir().join(b).join("LICENSE-APACHE").exists())
+            .map(|b| (*b).to_owned())
+            .collect(),
+    );
 }
 
 /// Claude Code resolves a skill by directory, so a mismatch is unreachable.

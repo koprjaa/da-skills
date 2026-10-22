@@ -66,7 +66,8 @@ track history at scale, including changes of relationships and changes of the so
 time, when sources keep being added and rules keep changing, and when auditability is a requirement
 (regulation). It is more work and is not used across the board in practice, so choose it for a specific
 requirement, not because it is fashionable. On top of a Data Vault there is always a presentation layer
-(information marts) for users; querying the vault directly is hard.
+(information marts) for users; querying the vault directly is hard. The vault itself is designed in
+`da-data-vault`, after `da-core-model`.
 
 ## Platform
 

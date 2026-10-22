@@ -5,9 +5,9 @@ description: Entry point and shared standard for data architecture work, whether
 
 # DA pipeline: map and shared standard
 
-Twelve skills for data architecture. They run in two modes: **design** builds an architecture from
-scratch, **review** goes through an existing solution and says what is wrong with it and which step
-fixes it. The steps are the same in both modes, only the question changes. In design it is "how do
+Eighteen skills for data architecture: the entry point, eleven steps and a Data Vault branch of six.
+They run in two modes: **design** builds an architecture from scratch, **review** goes through an
+existing solution and says what is wrong with it and which step fixes it. The steps are the same in both modes, only the question changes. In design it is "how do
 we do this", in review it is "was this done well, and how do I tell".
 
 ```
@@ -16,6 +16,9 @@ da-context → da-inventory → da-approach                     (analysis: need,
 da-consolidation → da-reference-data → da-core-model → da-integration → da-mart → da-governance
                                                             (layer design and loading)
 da-handover                                                 (package, decisions, presentation)
+
+da-data-vault → da-dv-config → da-dv-build → da-dv-test   (Data Vault branch after da-core-model,
+                 on demand: da-dv-troubleshoot, da-dv-rehash  only when da-approach chose Data Vault)
 
 da-review  ── entry for review mode: walks the current solution layer by layer and sends
               each finding to the step that fixes it
@@ -30,6 +33,9 @@ da-review  ── entry for review mode: walks the current solution layer by lay
 | `da-consolidation` | identity across sources: business key, merge hypotheses, XREF | after the approach |
 | `da-reference-data` | reference data, code mapping between sources | alongside consolidation |
 | `da-core-model` | integrated core: entities, keys, constraints, history (SCD2) | after consolidation |
+| `da-data-vault` | Data Vault design of the core: keys, hubs, links, satellites, business vault, changes in the sources | after the core model, when the approach is Data Vault |
+| `da-dv-config`, `da-dv-build`, `da-dv-test` | Data Vault in dbt with datavault4dbt: setup, models, tests (adapted from Scalefree, see NOTICE) | after `da-data-vault` |
+| `da-dv-troubleshoot`, `da-dv-rehash` | fixing datavault4dbt failures, recalculating hashes | on demand |
 | `da-integration` | staging → core → mart, mapping specs, loading, tests and reconciliation | after the core model |
 | `da-mart` | dimensional model for specific questions: facts, dimensions, grain, KPIs | after integration |
 | `da-governance` | metadata, lineage, ownership, quality as a control, security | throughout, closes the design |

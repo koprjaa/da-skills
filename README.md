@@ -26,6 +26,19 @@ To design from scratch, start with `da-context`. To check an existing solution, 
 | `da-governance` | Sets ownership, documentation and access. |
 | `da-handover` | Puts together the documentation and the presentation. |
 
+When `da-approach` picks Data Vault, the core is designed and built by a separate branch:
+
+| Skill | What it does |
+|---|---|
+| `da-data-vault` | Designs the Data Vault: hubs, links, satellites, business vault, changes in the sources. |
+| `da-dv-config` | Installs and configures datavault4dbt in a dbt project. |
+| `da-dv-build` | Builds the models in dbt. |
+| `da-dv-test` | Adds the Data Vault tests. |
+| `da-dv-troubleshoot` | Finds out why a datavault4dbt model misbehaves. |
+| `da-dv-rehash` | Recalculates hashes after the hash settings change. |
+
+The five `da-dv-*` skills are adapted from Scalefree's [datavault4dbt Agent Skills](https://github.com/ScalefreeCOM/datavault4dbt-agent-skills) under Apache 2.0. See [NOTICE](NOTICE).
+
 ## Install
 
 ```bash
@@ -41,4 +54,4 @@ Data quality steps use [dq-skills](https://github.com/koprjaa/dq-skills), so ins
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). The `da-dv-*` skills are Apache 2.0, see [NOTICE](NOTICE).

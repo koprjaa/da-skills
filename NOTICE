@@ -1,0 +1,20 @@
+da-skills
+Copyright 2026 Jan Alexandr Kopřiva. Licensed under the MIT License (LICENSE), except as noted below.
+
+The skills da-dv-config, da-dv-build, da-dv-test, da-dv-troubleshoot and da-dv-rehash are adapted from
+datavault4dbt Agent Skills (https://github.com/ScalefreeCOM/datavault4dbt-agent-skills), commit 578a053,
+Copyright 2026 Scalefree International GmbH, licensed under the Apache License, Version 2.0. A copy of
+that licence is in LICENSE-APACHE inside each of those skill folders.
+
+Changes made to the adapted files:
+
+- Renamed: configuring-datavault4dbt -> da-dv-config, using-datavault4dbt -> da-dv-build,
+  testing-a-datavault4dbt-project -> da-dv-test, troubleshooting-datavault4dbt -> da-dv-troubleshoot,
+  rehashing-datavault4dbt-entities -> da-dv-rehash; references between the skills updated.
+- Frontmatter: removed allowed-tools and user-invocable, added metadata.upstream, extended the
+  description with the place in the da-skills pipeline and a Keywords list.
+- Punctuation: em dashes replaced with colons, commas, brackets or full stops. No change of meaning.
+- da-dv-build: added a paragraph pointing to da-data-vault as the source of the design.
+
+The macro names, parameters and defaults described in those skills are unchanged and come from the
+datavault4dbt package (https://github.com/ScalefreeCOM/datavault4dbt, Apache License 2.0).

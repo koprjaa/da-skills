@@ -1,6 +1,6 @@
 # da-skills: guide for working on the skills
 
-Twelve Claude Code skills for designing or reviewing a data architecture, based on the course 4IT419
+Eighteen Claude Code skills for designing or reviewing a data architecture, based on the course 4IT419
 Data Solution Architectures (Prague University of Economics and Business). This file is for whoever
 edits the skills, human or agent.
 
@@ -15,11 +15,25 @@ Every `skills/<name>/SKILL.md` starts with frontmatter. `tests/skills.rs` enforc
   `Keywords:`. Triggers must be specific enough that two skills do not compete for the same prompt.
 - The body names its place in the pipeline (which step runs before and after). The order lives in
   `da-pipeline` and in `PIPELINE` in the tests; a new step goes into both.
-- Every step skill ends with a **Review** table (check, anti-pattern, finding). It doubles as the list
-  of common mistakes.
+- Every step skill and `da-data-vault` ends with a **Review** table (check, anti-pattern, finding). It
+  doubles as the list of common mistakes. The adapted `da-dv-*` skills keep Scalefree's structure.
 
 Do not set `user-invocable: false`: the skills are meant to be called directly (`/da-review`). Do not add
 `allowed-tools`: it pre-approves the listed tools without a permission prompt, it does not restrict them.
+
+## Adapted skills (`da-dv-*`)
+
+`da-dv-config`, `da-dv-build`, `da-dv-test`, `da-dv-troubleshoot` and `da-dv-rehash` come from Scalefree's
+datavault4dbt Agent Skills (Apache 2.0). What was changed is listed in `NOTICE`; keep that list current.
+
+- Their content is verified against the datavault4dbt package, not against the course. Do not rewrite
+  macro parameters from memory; check `dbt_packages/datavault4dbt` or the package repository.
+- Keep each folder's `LICENSE-APACHE`. The tests check it.
+- Updating: pull `~/Projects/_ext/scalefree/datavault4dbt-agent-skills`, diff its
+  `skills/datavault4dbt/skills/` against these folders after mapping the old names, carry over real
+  changes, update the commit in `NOTICE` and in each `metadata.upstream`, then run SkillSpector.
+- The design of a vault belongs in `da-data-vault`, the code in `da-dv-build`. Do not let the two grow
+  into each other.
 
 ## Where the content comes from
 

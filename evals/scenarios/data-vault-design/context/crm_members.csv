@@ -1,0 +1,4 @@
+member_no,first_name,last_name,email,birth_date,phone,registered
+M-101,Adam,Testovy,adam@example.org,1988-04-02,+420600111222,2023-02-01
+M-102,Bara,Vzorova,bara@example.org,1995-09-17,+420600333444,2023-05-12
+m-103,Cyril,Pokusny,cyril@example.org,1979-12-30,+420600555666,2024-01-20

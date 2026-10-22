@@ -84,7 +84,7 @@ Prepare an answer of under a minute, with a pointer to the evidence:
 
 | Question | Where the answer is |
 |---|---|
-| Why this approach and not another (Inmon, Kimball, Data Vault)? | decision from `da-approach`, criteria |
+| Why this approach and not another (Inmon, Kimball, Data Vault)? | decision from `da-approach`, criteria; for Data Vault also the entity table from `da-data-vault` |
 | How did you tell similarity from evidence of identity? Which candidate was rejected? | hypothesis catalogue in `da-consolidation` |
 | What does your negative test prove? | `da-consolidation` |
 | How do you prevent double counting a transaction held in two systems? | XREF of representations, reconciliation |
